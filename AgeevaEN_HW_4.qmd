@@ -1,0 +1,79 @@
+---
+title: "HW_4"
+author: "AgeevaEN"
+format: html
+editor: visual
+---
+
+```{r}
+install.packages("qqplotr")
+library(tidyverse)
+library(psych)
+library(DeskTools)
+library(qqplotr)
+library(vcd)
+library(gridExtra)
+```
+
+**Задание 1** Рассмотрите следующую статистическую гипотезу.
+
+Проводят некоторое исследование пациентов с артериальной гипертензией. Предположим, что внедрение нового препарата в среднем лучше снижает их давление по сравнению со стандартной терапией.
+
+Задайте seed для воспроизводимости результатов (функция set.seed()). Задайте размер выборки sample_size <- 30. Задайте значение среднего артериального давления до приема нового препарата и после.
+
+```{r}
+set.seed(500)
+sample_size <- 30
+
+pressure_medium_before <- 145
+pressure_medium_after <- 115
+
+pressure_before <- rnorm(sample_size, pressure_medium_before, sd=3)
+
+pressure_after <- rnorm(sample_size, pressure_medium_after, sd=3)
+
+df <- data.frame(PB = pressure_before, PA = pressure_after)
+
+head(df)
+```
+
+Сформулируйте нулевую и альтернативную гипотезы.
+
+H0 - новый препарат никак не отличается по влиянию на давление по сравнению со стандартной терапией. 
+H1 - новый препарат в среднем лучше снижает давление по сравнению со стандартной терапией.
+
+Определите уровень значимости.
+
+```{r}
+alfa = 0.05
+```
+
+Выберите статистический тест для проверки гипотезы и аргументируйте свой выбор.
+Чтобы выбрать стат. тест сначала изучаем нашу выборку на нормальность распределения
+
+1. Визуальный метод
+
+```{r}
+hist(pressure_before, col='steelblue', main='Визуальная оценка')
+hist(pressure_after, col='steelblue', main='Визуальная оценка')
+
+```
+```{r}
+qqnorm(pressure_before, main='Визуальная оценка')
+qqline(pressure_before)
+
+```
+
+qqnorm(pressure_after, main='Визуальная оценка')
+qqline(pressure_after)
+```
+2. тест Шапиро-Уилка на нормальность распределения
+H0 - распределение нормальное
+H1 - распределение отлично от нормального
+
+
+```{r}
+shapiro.test(df$PB)
+shapiro.test(df$PA)
+
+```
